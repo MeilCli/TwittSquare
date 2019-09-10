@@ -1,0 +1,59 @@
+﻿@using TwittSquare.Core.Twitter.Model;
+@using System.Security.Cryptography;
+@using System.Text;
+@using System.Linq;
+@{
+    ViewData["Title"] = "認証管理";
+    var list = (ViewBag.Logins as List<Login>).OrderByDescending(x => x.LastLoginAt).ToList();
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">ログイントークン一覧</div>
+    <div class="panel-body">
+        <p>このアカウントで現在有効なログイン中のトークンが表示されます</p>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Browser</th>
+                    <th>Platform</th>
+                    <th>Expires</th>
+                    <th>LastLogin</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @using(var md5 = MD5.Create()) {
+                    @foreach(var login in list) {
+                        <tr>
+                            @{
+                                var hashedBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(login.Token));
+                                var hash = BitConverter.ToString(hashedBytes).Replace("-","").ToLower();
+                            }
+                            <td>@hash</td>
+                            <td>@login.Browser</td>
+                            <td>@login.Platform</td>
+                            @{
+                                var span = login.Expires - DateTime.Now;
+                                string loginSpan = span.ToString("c");
+                            }
+                            <td>@loginSpan</td>
+                            <td>@login.LastLoginAt.ToString()</td>
+                            <td>
+                                @if(login.Token == (ViewBag.CurrentLogin as Login).Token) {
+                                    <button type="button" class="btn btn-primary" disabled="disabled">現在のセッション</button>
+                                } else {
+                                    <a class="btn btn-danger" href=@Url.Action("Revoke","Account",new { revokeToken = hash }) role="button">無効化する</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

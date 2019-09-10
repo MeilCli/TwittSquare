@@ -1,0 +1,26 @@
+﻿@using TwittSquare.Core.Twitter.Model;
+@{
+    ViewData["Title"] = "アカウント";
+    var user = ViewBag.User as User;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="media">
+            <div class="media-left">
+                <img class="media-object" src=@user.ProfileImageUrl>
+            </div>
+            <div class="media-body">
+                @{
+                    string head = $"{user.Name} - @{user.ScreenName}";
+                }
+                <h4 class="media-heading">@head</h4>
+                @user.Description
+                @user.Url
+                @user.Location
+            </div>
+        </div>
+    </div>
+</div>

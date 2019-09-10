@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Hangfire": "1.6.6",
+    "Hangfire.PostgreSql.NetCore": "1.4.3",
+    "Microsoft.NETCore.App": {
+        "type": "platform",
+        "version": "1.0.1"
+    },
+    "TwittSquare.Hangfire.Task": "1.0.0-*"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
+    }
+  }
+}
